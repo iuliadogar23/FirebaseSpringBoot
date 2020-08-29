@@ -1,6 +1,8 @@
 package com.spring.FirebaseSpringBoot.model;
 
-public class Movie {
+import java.io.Serializable;
+
+public class Movie implements Serializable {
 
     private String title;
 

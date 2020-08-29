@@ -1,14 +1,12 @@
 package com.spring.FirebaseSpringBoot.service;
 
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import com.google.firebase.cloud.FirestoreClient;
 import com.spring.FirebaseSpringBoot.model.Movie;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -29,7 +27,7 @@ public class MovieService {
 
         DocumentSnapshot document = future.get();
 
-        Movie movie = null;
+        Movie movie;
 
         if(document.exists()) {
             movie = document.toObject(Movie.class);
@@ -45,10 +43,30 @@ public class MovieService {
         return collectionsApiFuture.get().getUpdateTime().toString();
     }
 
-    public String deleteMovie(String name) {
+    public boolean deleteMovie(String name) {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> writeResult = dbFirestore.collection(COLLECTION_NAME).document(name).delete();
-        return "Movie with title "+name+" has been deleted";
+        if (dbFirestore.collection(COLLECTION_NAME).document(name) !=null) {
+            dbFirestore.collection(COLLECTION_NAME).document(name).delete();
+            return true;
+        }
+        return false;
+    }
+
+    public List<Movie> getAllMovies() throws InterruptedException, ExecutionException {
+        Firestore dbFirestore = FirestoreClient.getFirestore();
+        CollectionReference documentReference = dbFirestore.collection(COLLECTION_NAME);
+        ApiFuture<QuerySnapshot> future = documentReference.get();
+
+        QuerySnapshot document = future.get();
+
+        List<Movie> movie;
+
+        if(!document.isEmpty()) {
+            movie = document.toObjects(Movie.class);
+            return movie;
+        }else {
+            return null;
+        }
     }
 
 }

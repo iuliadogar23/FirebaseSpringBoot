@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -14,6 +15,11 @@ public class MovieController {
 
     @Autowired
     private MovieService movieService;
+
+    @GetMapping("/getAllMovies")
+    public List<Movie> getAllMovies() throws ExecutionException, InterruptedException {
+        return movieService.getAllMovies();
+    }
 
     @GetMapping("/getMovieDetails")
     public Movie getMovie(@RequestParam String name ) throws InterruptedException, ExecutionException {
@@ -31,7 +37,7 @@ public class MovieController {
     }
 
     @DeleteMapping("/deleteMovie")
-    public String deleteMovie(@RequestParam String title){
+    public boolean deleteMovie(@RequestParam String title){
         return movieService.deleteMovie(title);
     }
 
