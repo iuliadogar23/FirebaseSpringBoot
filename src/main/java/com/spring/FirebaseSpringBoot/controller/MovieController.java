@@ -1,5 +1,6 @@
 package com.spring.FirebaseSpringBoot.controller;
 
+import com.google.gson.Gson;
 import com.spring.FirebaseSpringBoot.model.Movie;
 import com.spring.FirebaseSpringBoot.service.MovieService;
 import io.swagger.annotations.Api;
@@ -26,14 +27,16 @@ public class MovieController {
         return movieService.getMovieDetails(name);
     }
 
-    @PostMapping("/createMovie")
-    public String createMovie(@RequestBody Movie movie ) throws InterruptedException, ExecutionException {
-        return movieService.saveMovieDetails(movie);
+    @PostMapping(value = "/createMovie")
+    public void createMovie(@RequestBody String movie ) throws InterruptedException, ExecutionException {
+        Gson gson = new Gson();
+        movieService.saveMovieDetails(gson.fromJson(movie, Movie.class));
     }
 
     @PutMapping("/updateMovie")
-    public String updateMovie(@RequestBody Movie movie  ) throws InterruptedException, ExecutionException {
-        return movieService.updateMovieDetails(movie);
+    public String updateMovie(@RequestBody String movie  ) throws InterruptedException, ExecutionException {
+        Gson gson = new Gson();
+        return movieService.updateMovieDetails(gson.fromJson(movie, Movie.class));
     }
 
     @DeleteMapping("/deleteMovie")
