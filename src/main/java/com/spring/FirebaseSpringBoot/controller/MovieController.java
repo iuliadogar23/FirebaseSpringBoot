@@ -23,8 +23,8 @@ public class MovieController {
     }
 
     @GetMapping("/getMovieDetails")
-    public Movie getMovie(@RequestParam String name ) throws InterruptedException, ExecutionException {
-        return movieService.getMovieDetails(name);
+    public Movie getMovie(@RequestParam String title ) throws InterruptedException, ExecutionException {
+        return movieService.getMovieDetails(title);
     }
 
     @PostMapping(value = "/createMovie")
